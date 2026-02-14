@@ -1,0 +1,6 @@
+*.pem
+.git
+.env
+Dockerfile
+docker-compose.yml
+node_modules.env
