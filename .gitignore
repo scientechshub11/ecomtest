@@ -1,6 +1,5 @@
 *.pem
 .git
-.env
 Dockerfile
 docker-compose.yml
-node_modules.env
+node_modules
