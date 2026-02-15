@@ -12,9 +12,12 @@ const sequelize = new Sequelize(process.env.DB_NAME,process.env.POSTGRES_USER, p
       acquire: 30000,
       idle: 10000
     },
-    dialectOptions: process.env.DB_SSL === "true"
-      ? { ssl: { require: true, rejectUnauthorized: true } }
-      : {}
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false   // 👈 fix for SELF_SIGNED_CERT_IN_CHAIN
+      }
+    }
 })
 
 
