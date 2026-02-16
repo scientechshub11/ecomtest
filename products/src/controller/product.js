@@ -19,7 +19,7 @@ module.exports = class{
             description:description, 
             price:price, 
             category:category,
-            image_url:image_url
+            imageUrl:image_url
         }
         let productdetails = await this.productModel.create(productObject);
         if(!productdetails){
