@@ -1,10 +1,14 @@
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { fromInstanceMetadata } = require("@aws-sdk/credential-providers");
 
 const REGION = "ap-south-2";
-const BUCKET = "ecommerce-uploads-army-2026"; // <-- replace with your S3 bucket name
+const BUCKET = "ecommerce-uploads-army-2026";
 
-const s3 = new S3Client({ region: REGION });
+const s3 = new S3Client({
+  region: REGION,
+  credentials: fromInstanceMetadata(), // 👈 force EC2 IAM role
+});
 
 module.exports = async (req, res) => {
   try {
@@ -22,8 +26,7 @@ module.exports = async (req, res) => {
       ContentType: contentType,
     });
 
-    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 mins
-
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
     const publicUrl = `https://${BUCKET}.s3.${REGION}.amazonaws.com/${key}`;
 
     return res.json({ uploadUrl, key, publicUrl });
