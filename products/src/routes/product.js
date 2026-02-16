@@ -9,6 +9,23 @@ router.get('/product', async(req, res)=>{
         product,
         status:200,
         message:"testig product with this api url"
-    })
+    });
 })
+router.post("/products", async (req, res) => {
+  try {
+    const { description, price, category, imageUrl } = req.body;
+    console.log(req.body)
+    if (!description || !price || !category || !imageUrl) {
+      return res.status(400).json({ error: "description, price, category, imageUrl required" });
+    }
+    let image_url = imageUrl
+    let product = await productControllerObj.createProduct(description, price, category, image_url);
+
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create product" });
+  }
+});
+
 module.exports = router;
