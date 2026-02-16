@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
       ContentType: contentType,
     });
 
-    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 9000 });
     const publicUrl = `https://${BUCKET}.s3.${REGION}.amazonaws.com/${key}`;
 
     return res.json({ uploadUrl, key, publicUrl });
