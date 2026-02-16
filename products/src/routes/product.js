@@ -11,7 +11,7 @@ router.get('/product', async(req, res)=>{
         message:"testig product with this api url"
     });
 })
-router.post("/products", async (req, res) => {
+router.post("/product", async (req, res) => {
   try {
     const { description, price, category, imageUrl } = req.body;
     console.log(req.body)
