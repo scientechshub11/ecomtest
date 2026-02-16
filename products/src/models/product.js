@@ -16,7 +16,8 @@ const Product = (sequelize, DataTypes)=>{
         },
         imageUrl:{
             type:DataTypes.TEXT,
-            allowNull:true
+            allowNull:true,
+            field: "image_url"  
         },
         price:{
             type:DataTypes.TEXT,
