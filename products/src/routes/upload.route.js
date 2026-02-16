@@ -5,13 +5,7 @@ const uploadcontroller = require('../controller/upload.controller');
 
 
 
-router.get('/upload-url', async(req, res)=>{
-    let filedetails = await uploadcontroller(req, res)
-    res.json({
-        message:"s3 is working!",
-        filedetails
-    })
-})
+router.get('/upload-url', uploadcontroller)
 
 
 
