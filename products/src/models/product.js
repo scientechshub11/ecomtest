@@ -8,7 +8,6 @@ const Product = (sequelize, DataTypes)=>{
         description:{
             type:DataTypes.TEXT,
             allowNull:true,
-            unique:true
         },
         metadata:{
             type:DataTypes.TEXT,
