@@ -28,9 +28,6 @@ router.post("/product", async (req, res) => {
   }
 });
 
-
-
-
 router.post("/order", async (req, res) => {
   try {
     await sendToQueue({
