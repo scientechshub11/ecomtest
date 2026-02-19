@@ -2,7 +2,7 @@ const express =require('express');
 const router = express.Router(); 
 const productController = require('../controller/product');
 let productControllerObj = new productController()
-
+const sendToQueue = require("../services/sqsProducer");
 router.get('/product', async(req, res)=>{
     let product = await productControllerObj.getProducts();
     res.json({
@@ -27,5 +27,24 @@ router.post("/product", async (req, res) => {
     res.status(500).json({ error: "Failed to create product" });
   }
 });
+
+
+
+
+app.post("/order", async (req, res) => {
+  try {
+    await sendToQueue({
+      orderId: Date.now(),
+      userId: 101,
+      task: "PROCESS_ORDER",
+    });
+
+    res.json({ message: "Order queued successfully" });
+  } catch (err) {
+    console.error("SQS error:", err);
+    res.status(500).json({ error: "Failed to queue job" });
+  }
+});
+
 
 module.exports = router;
