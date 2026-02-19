@@ -31,7 +31,7 @@ router.post("/product", async (req, res) => {
 
 
 
-app.post("/order", async (req, res) => {
+router.post("/order", async (req, res) => {
   try {
     await sendToQueue({
       orderId: Date.now(),
