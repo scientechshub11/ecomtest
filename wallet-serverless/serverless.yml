@@ -2,22 +2,21 @@ service: wallet-api
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x        # 👈 also fix runtime to 20 (matches SDK)
   region: ap-south-2
   stage: dev
   environment:
     WALLET_TABLE: WalletTable
-
-iam:
-  role:
-    statements:
-      - Effect: Allow
-        Action:
-          - dynamodb:PutItem
-          - dynamodb:GetItem
-          - dynamodb:UpdateItem
-        Resource:
-          - arn:aws:dynamodb:ap-south-2:*:table/WalletTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+          Resource:
+            - arn:aws:dynamodb:ap-south-2:395512255733:table/WalletTable
 
 functions:
   createWallet:
