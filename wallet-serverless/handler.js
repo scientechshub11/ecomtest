@@ -1,7 +1,9 @@
-const AWS = require("aws-sdk");
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const { v4: uuidv4 } = require("uuid");
 
-const dynamo = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({ region: "ap-south-2" });
+const dynamo = DynamoDBDocumentClient.from(client);
 const TABLE = process.env.WALLET_TABLE;
 
 module.exports.createWallet = async (event) => {
@@ -13,10 +15,12 @@ module.exports.createWallet = async (event) => {
     createdAt: new Date().toISOString()
   };
 
-  await dynamo.put({
-    TableName: TABLE,
-    Item: item
-  }).promise();
+  await dynamo.send(
+    new PutCommand({
+      TableName: TABLE,
+      Item: item
+    })
+  );
 
   return {
     statusCode: 200,
@@ -27,15 +31,17 @@ module.exports.createWallet = async (event) => {
 module.exports.creditWallet = async (event) => {
   const { userId, amount } = JSON.parse(event.body || "{}");
 
-  const result = await dynamo.update({
-    TableName: TABLE,
-    Key: { userId },
-    UpdateExpression: "SET balance = balance + :amt",
-    ExpressionAttributeValues: {
-      ":amt": Number(amount)
-    },
-    ReturnValues: "UPDATED_NEW"
-  }).promise();
+  const result = await dynamo.send(
+    new UpdateCommand({
+      TableName: TABLE,
+      Key: { userId },
+      UpdateExpression: "SET balance = balance + :amt",
+      ExpressionAttributeValues: {
+        ":amt": Number(amount)
+      },
+      ReturnValues: "UPDATED_NEW"
+    })
+  );
 
   return {
     statusCode: 200,
@@ -46,15 +52,17 @@ module.exports.creditWallet = async (event) => {
 module.exports.debitWallet = async (event) => {
   const { userId, amount } = JSON.parse(event.body || "{}");
 
-  const result = await dynamo.update({
-    TableName: TABLE,
-    Key: { userId },
-    UpdateExpression: "SET balance = balance - :amt",
-    ExpressionAttributeValues: {
-      ":amt": Number(amount)
-    },
-    ReturnValues: "UPDATED_NEW"
-  }).promise();
+  const result = await dynamo.send(
+    new UpdateCommand({
+      TableName: TABLE,
+      Key: { userId },
+      UpdateExpression: "SET balance = balance - :amt",
+      ExpressionAttributeValues: {
+        ":amt": Number(amount)
+      },
+      ReturnValues: "UPDATED_NEW"
+    })
+  );
 
   return {
     statusCode: 200,
