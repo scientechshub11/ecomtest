@@ -11,7 +11,7 @@ module.exports.createWallet = async (event) => {
   const body = JSON.parse(event.body || "{}");
 
   const item = {
-    userId: body.userId || uuidv4(),
+    userId: body.userId || '123546446564##$$$',
     balance: 0,
     createdAt: new Date().toISOString()
   };
