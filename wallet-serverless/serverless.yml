@@ -1,0 +1,59 @@
+service: wallet-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-2
+  stage: dev
+  environment:
+    WALLET_TABLE: WalletTable
+
+iam:
+  role:
+    statements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+        Resource:
+          - arn:aws:dynamodb:ap-south-2:*:table/WalletTable
+
+functions:
+  createWallet:
+    handler: handler.createWallet
+    events:
+      - http:
+          path: wallet/create
+          method: post
+          cors: true
+
+  creditWallet:
+    handler: handler.creditWallet
+    events:
+      - http:
+          path: wallet/credit
+          method: post
+          cors: true
+
+  debitWallet:
+    handler: handler.debitWallet
+    events:
+      - http:
+          path: wallet/debit
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    WalletTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: WalletTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
